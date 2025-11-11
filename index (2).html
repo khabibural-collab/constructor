@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrainSpace Constructor</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        nav {
+            background: rgba(0,0,0,0.3);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .logo {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .nav-btns {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .nav-btn:hover, .nav-btn.active {
+            background: white;
+            color: #667eea;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 15px;
+        }
+        
+        .page { display: none; }
+        .page.show { display: block; }
+        
+        .home {
+            text-align: center;
+            color: white;
+        }
+        
+        .home h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .home p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .home-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+        }
+        
+        .card-emoji {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .card-desc {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .ideas-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        .ideas-header h1 {
+            font-size: 44px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .ideas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .idea-btn {
+            background: white;
+            border: none;
+            border-radius: 15px;
+            padding: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            min-height: 140px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        
+        .idea-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+        }
+        
+        .idea-btn-emoji {
+            font-size: 40px;
+        }
+        
+        .cat1 { background: linear-gradient(135deg, #FF6B6B 0%, #FF8E72 100%); color: white; }
+        .cat2 { background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%); color: white; }
+        .cat3 { background: linear-gradient(135deg, #FFD43B 0%, #FFA940 100%); color: #333; }
+        .cat4 { background: linear-gradient(135deg, #95E1D3 0%, #F38181 100%); color: white; }
+        .cat5 { background: linear-gradient(135deg, #A8EDEA 0%, #FED6E3 100%); color: #333; }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+        }
+        
+        .modal.open {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-box {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            animation: pop 0.3s;
+        }
+        
+        @keyframes pop {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        .idea-big-emoji {
+            font-size: 60px;
+            margin: 15px 0;
+        }
+        
+        .idea-big-name {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            margin: 15px 0;
+        }
+        
+        .idea-big-desc {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .modal-btn {
+            flex: 1;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        
+        .modal-btn:hover {
+            background: #764ba2;
+        }
+        
+        .modal-btn.close {
+            background: #999;
+        }
+        
+        @media (max-width: 768px) {
+            .home h1 { font-size: 32px; }
+            .ideas-header h1 { font-size: 28px; }
+            .ideas-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-inner">
+            <div class="logo" onclick="go('home')">🎮 BrainSpace</div>
+            <div class="nav-btns">
+                <button class="nav-btn active" onclick="go('home')">Главная</button>
+                <button class="nav-btn" onclick="go('ideas')">Генератор идей</button>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <!-- HOME -->
+        <div class="page show" id="home">
+            <div class="home">
+                <h1>🎮 BrainSpace</h1>
+                <p>Генератор идей для конструктора</p>
+                <div class="home-grid">
+                    <div class="card" onclick="go('ideas')">
+                        <div class="card-emoji">💡</div>
+                        <div class="card-title">Генератор идей</div>
+                        <div class="card-desc">Случайная идея для сборки</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- IDEAS -->
+        <div class="page" id="ideas">
+            <div class="ideas-header">
+                <h1>💡 Выбери категорию</h1>
+            </div>
+            <div class="ideas-grid">
+                <button class="idea-btn cat1" onclick="openIdea('transport')">
+                    <span class="idea-btn-emoji">🚗</span>
+                    Транспорт
+                </button>
+                <button class="idea-btn cat2" onclick="openIdea('buildings')">
+                    <span class="idea-btn-emoji">🏗️</span>
+                    Строения
+                </button>
+                <button class="idea-btn cat3" onclick="openIdea('robots')">
+                    <span class="idea-btn-emoji">🤖</span>
+                    Роботы
+                </button>
+                <button class="idea-btn cat4" onclick="openIdea('animals')">
+                    <span class="idea-btn-emoji">🐾</span>
+                    Животные
+                </button>
+                <button class="idea-btn cat5" onclick="openIdea('fantasy')">
+                    <span class="idea-btn-emoji">🎡</span>
+                    Фантазия
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODAL -->
+    <div class="modal" id="modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">💡</div>
+                <button class="modal-close" onclick="closeIdea()">×</button>
+            </div>
+            <div class="idea-big-emoji" id="ideaEmoji">🎮</div>
+            <div class="idea-big-name" id="ideaName">Идея</div>
+            <div class="idea-big-desc" id="ideaDesc">Описание</div>
+            <div class="modal-buttons">
+                <button class="modal-btn" onclick="nextIdea()">🎲 Ещё!</button>
+                <button class="modal-btn close" onclick="closeIdea()">Закрыть</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const ideas = {
+            transport: [
+                {e:'🚗',n:'Машина мечты',d:'С четырьмя колёсами и крышей'},
+                {e:'🏎️',n:'Гоночный болид',d:'Быстрая и аэродинамичная'},
+                {e:'🚓',n:'Полицейская машина',d:'С проблесковыми огнями'},
+                {e:'✈️',n:'Самолёт',d:'С двумя крыльями'},
+                {e:'🚁',n:'Вертолёт',d:'С вращающимися лопастями'},
+                {e:'🚀',n:'Космическая ракета',d:'Готовится к взлёту'},
+                {e:'🚂',n:'Паровоз',d:'С вагончиком'},
+                {e:'🚚',n:'Грузовик',d:'Для доставки деталей'},
+                {e:'🚌',n:'Автобус',d:'С пассажирами'},
+                {e:'⛵',n:'Лодка',d:'Или катер'}
+            ],
+            buildings: [
+                {e:'🏰',n:'Башня инженеров',d:'Высокая и прочная'},
+                {e:'🏗️',n:'Кран',d:'С поднимающейся стрелой'},
+                {e:'🌉',n:'Мост',d:'Через реку'},
+                {e:'🏠',n:'Дом',d:'На двух этажах'},
+                {e:'💨',n:'Ветряная мельница',d:'Можно крутить'},
+                {e:'🌾',n:'Ферма',d:'С забором'},
+                {e:'🛸',n:'Космическая станция',d:'Научное учреждение'},
+                {e:'🏛️',n:'Арка или ворота',d:'Красивые и симметричные'},
+                {e:'⚔️',n:'Катапульта',d:'Запускает шарик'},
+                {e:'🔥',n:'Пожарная вышка',d:'С лестницей'}
+            ],
+            robots: [
+                {e:'🤖',n:'Робот',d:'С подвижными руками'},
+                {e:'🐕',n:'Робот-собака',d:'Трансформер'},
+                {e:'🧹',n:'Робот-пылесос',d:'С колёсами и щёткой'},
+                {e:'⚙️',n:'Механизм',d:'С вращающимися шестерёнками'},
+                {e:'⬆️',n:'Мини-лифт',d:'Поднимает кубик'},
+                {e:'💨',n:'Вентилятор',d:'С пропеллером'},
+                {e:'⏰',n:'Часы',d:'С вращающимися стрелками'},
+                {e:'👋',n:'Машущий робот',d:'Помахивает рукой'},
+                {e:'🔧',n:'Рычажный подъемник',d:'Поднимает предметы'},
+                {e:'📦',n:'Мини-конвейер',d:'Движущаяся лента'}
+            ],
+            animals: [
+                {e:'🦕',n:'Динозавр',d:'С длинной шеей'},
+                {e:'🐠',n:'Рыба',d:'С подвижным хвостом'},
+                {e:'🦅',n:'Птица',d:'С крыльями'},
+                {e:'🕷️',n:'Паук',d:'На восьми ногах'},
+                {e:'🐘',n:'Слон',d:'С хоботом'},
+                {e:'🐶',n:'Собака',d:'Верный друг'},
+                {e:'🐱',n:'Кот',d:'Мягкий и пушистый'},
+                {e:'🦋',n:'Бабочка',d:'С симметричными крыльями'},
+                {e:'🐢',n:'Черепаха',d:'С панцирем'},
+                {e:'🐛',n:'Жук',d:'С антеннами'},
+                {e:'🐍',n:'Змейка',d:'Которая гнётся'}
+            ],
+            fantasy: [
+                {e:'🎡',n:'Карусель',d:'Весёлое развлечение'},
+                {e:'🚀',n:'Ракета',d:'И стартовая площадка'},
+                {e:'🧩',n:'Лабиринт',d:'Для катящегося шарика'},
+                {e:'🏹',n:'Танк',d:'Армейская техника'},
+                {e:'🛒',n:'Тележка',d:'Для перевозки грузов'},
+                {e:'🏰',n:'Замок',d:'С башнями'},
+                {e:'🛸',n:'Космический корабль',d:'Инопланетян'},
+                {e:'🦾',n:'Механическая рука',d:'Подвижная'},
+                {e:'🚁',n:'Летающий дрон',d:'Из воображения'}
+            ]
+        };
+        
+        let cat='';
+        const cats={transport:'🚗',buildings:'🏗️',robots:'🤖',animals:'🐾',fantasy:'🎡'};
+        const catsN={transport:'Транспорт',buildings:'Строения',robots:'Роботы',animals:'Животные',fantasy:'Фантазия'};
+        
+        function go(p) {
+            document.querySelectorAll('.page').forEach(x=>x.classList.remove('show'));
+            document.getElementById(p).classList.add('show');
+            document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+        
+        function openIdea(c) {
+            cat=c;
+            show();
+            document.getElementById('modal').classList.add('open');
+        }
+        
+        function show() {
+            const l=ideas[cat];
+            const i=l[Math.floor(Math.random()*l.length)];
+            document.getElementById('modalTitle').textContent=cats[cat]+' '+catsN[cat];
+            document.getElementById('ideaEmoji').textContent=i.e;
+            document.getElementById('ideaName').textContent=i.n;
+            document.getElementById('ideaDesc').textContent=i.d;
+        }
+        
+        function nextIdea() {show();}
+        
+        function closeIdea() {
+            document.getElementById('modal').classList.remove('open');
+        }
+        
+        window.onclick=e=>{
+            if(e.target.id==='modal')closeIdea();
+        }
+    </script>
+</body>
+</html>
