@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrainSpace Constructor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-inner">
+            <div class="logo" onclick="go('home')">🎮 BrainSpace</div>
+            <div class="nav-btns">
+                <button class="nav-btn active" onclick="go('home')">Главная</button>
+                <button class="nav-btn" onclick="go('ideas')">Генератор идей</button>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="page show" id="home">
+            <div class="home">
+                <h1>🎮 BrainSpace</h1>
+                <p>Генератор идей для конструктора</p>
+                <div class="home-grid">
+                    <div class="card" onclick="go('ideas')">
+                        <div class="card-emoji">💡</div>
+                        <div class="card-title">Генератор идей</div>
+                        <div class="card-desc">Случайная идея для сборки</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="page" id="ideas">
+            <div class="ideas-header">
+                <h1>💡 Выбери категорию</h1>
+            </div>
+            <div class="ideas-grid">
+                <button class="idea-btn cat1" onclick="openIdea('transport')">
+                    <span class="idea-btn-emoji">🚗</span>
+                    Транспорт
+                </button>
+                <button class="idea-btn cat2" onclick="openIdea('buildings')">
+                    <span class="idea-btn-emoji">🏗️</span>
+                    Строения
+                </button>
+                <button class="idea-btn cat3" onclick="openIdea('robots')">
+                    <span class="idea-btn-emoji">🤖</span>
+                    Роботы
+                </button>
+                <button class="idea-btn cat4" onclick="openIdea('animals')">
+                    <span class="idea-btn-emoji">🐾</span>
+                    Животные
+                </button>
+                <button class="idea-btn cat5" onclick="openIdea('fantasy')">
+                    <span class="idea-btn-emoji">🎡</span>
+                    Фантазия
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">💡</div>
+                <button class="modal-close" onclick="closeIdea()">×</button>
+            </div>
+            <div class="idea-big-emoji" id="ideaEmoji">🎮</div>
+            <div class="idea-big-name" id="ideaName">Идея</div>
+            <div class="idea-big-desc" id="ideaDesc">Описание</div>
+            <div class="modal-buttons">
+                <button class="modal-btn" onclick="nextIdea()">🎲 Ещё!</button>
+                <button class="modal-btn close" onclick="closeIdea()">Закрыть</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
